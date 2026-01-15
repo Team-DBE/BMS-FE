@@ -1,4 +1,10 @@
+import DeviceCard from "../../components/deviceCard";
+
 function Home() {
-  return <h1>Home</h1>;
+  return (
+    <>
+      <DeviceCard />
+    </>
+  );
 }
 export default Home;

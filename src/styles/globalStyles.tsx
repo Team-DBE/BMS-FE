@@ -112,6 +112,7 @@ const reset = css`
     line-height: 1;
     font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-color: #1b1d1f;
   }
 
   ol,
