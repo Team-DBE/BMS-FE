@@ -2,7 +2,12 @@ import styled from "@emotion/styled";
 import dot from "../assets/dot.svg";
 import device from "../assets/device.svg";
 
-export default function DeviceCard() {
+interface DeviceCardProps {
+  deviceName: string,
+  temperature: number;
+}
+
+export default function DeviceCard({ deviceName, temperature }: DeviceCardProps) {
   return (
     <CardContainer>
       <DotImage>
@@ -12,10 +17,10 @@ export default function DeviceCard() {
         <DeviceImage>
           <img src={device} alt="device" />
         </DeviceImage>
-        <p>기기 1</p>
+        <p>{deviceName}</p>
       </DeviceContainer>
       <TemperatureContainer>
-        <p>10000°C</p>
+        <p>{temperature}°C</p>
       </TemperatureContainer>
     </CardContainer>
   );
