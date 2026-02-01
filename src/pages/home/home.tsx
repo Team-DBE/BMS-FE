@@ -12,17 +12,17 @@ function Home() {
       </Header>
       <CardGrid>
         <DeviceAddCard />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={true} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
       </CardGrid>
     </HomeContainer>
   );
