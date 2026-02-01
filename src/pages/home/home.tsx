@@ -5,7 +5,7 @@ import DeviceAddCard from "../../components/DeviceAddCard";
 
 function Home() {
   return (
-    <>
+    <HomeContainer>
       <Header>
         <DeviceText>연결된 기기</DeviceText>
         <DeviceDeleteButton />
@@ -24,7 +24,7 @@ function Home() {
         <DeviceCard deviceName="기기 1" temperature={10000} />
         <DeviceCard deviceName="기기 1" temperature={10000} />
       </CardGrid>
-    </>
+    </HomeContainer>
   );
 }
 
