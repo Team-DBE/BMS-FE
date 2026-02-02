@@ -1,47 +1,36 @@
 import styled from "@emotion/styled";
 import dot from "../assets/dot.svg";
 import device from "../assets/device.svg";
-import warningIcon from "../assets/warning.svg"
+import warningIcon from "../assets/warning.svg";
 
 interface DeviceCardProps {
-  deviceName: string,
+  deviceName: string;
   temperature: number;
   warning: boolean;
+  isDeleteMode: boolean;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-export default function DeviceCard({ deviceName, temperature, warning }: DeviceCardProps) {
+export default function DeviceCard({ deviceName, temperature, warning, isDeleteMode, isSelected, onSelect }: DeviceCardProps) {
   return (
     <CardContainer>
-      {warning && <WarningIcon src={warningIcon} alt="warning" />}
-      <DotImage>
-        <img src={dot} alt="dot" />
-      </DotImage>
-      <DeviceContainer>
+      {isDeleteMode ? <label onClick={onSelect}><DeleteCheckbox isSelected={isSelected} /></label> : warning && <WarningIcon src={warningIcon} alt="warning" />}
+      <DotImage>{isDeleteMode ? null : <img src={dot} alt="dot" />}</DotImage>
+      <DeviceContainer className="device">
         <DeviceImage>
           <img src={device} alt="device" />
         </DeviceImage>
         <p>{deviceName}</p>
       </DeviceContainer>
-      <TemperatureContainer>
+      <TemperatureContainer className="temp">
         <p>{temperature}°C</p>
       </TemperatureContainer>
     </CardContainer>
   );
 }
 
-const CardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  width: 240px;
-  height: 286px;
-
-  background: #26282b;
-  border: 1px solid #ffffff1a;
-  border-radius: 12px;
-`;
-
+// 온도 컨테이너
 const TemperatureContainer = styled.div`
   p {
     color: #fdf3f3;
@@ -51,6 +40,7 @@ const TemperatureContainer = styled.div`
     line-height: 32px;
     text-align: center;
     letter-spacing: -0.025em;
+    transition: 0.3s;
   }
   display: flex;
   flex-direction: row;
@@ -67,8 +57,53 @@ const TemperatureContainer = styled.div`
 
   background: #454c53;
   border-radius: 12px;
+  transition: 0.3s;
 `;
 
+// 기기 카드 컨테이너
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 240px;
+  height: 286px;
+
+  background: #26282b;
+  border: 1px solid #ffffff1a;
+  border-radius: 12px;
+  transition: 0.3s;
+  :hover {
+    transform: translateY(-15px);
+    background: #454C53;
+    
+    .temp {
+      background: #72787F;
+    }
+    .temp {
+      p {
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 26px;
+      }
+    }
+    .device {
+      p {
+        width: 204px;
+        height: 32px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 26px;
+        color: #FDF3F3;
+      }
+    }
+  }
+`;
+
+// 기기 컨테이너
 const DeviceContainer = styled.div`
   p {
     width: 204px;
@@ -83,6 +118,7 @@ const DeviceContainer = styled.div`
     letter-spacing: -0.025em;
 
     color: #ffffff;
+    transition: 0.3s;
   }
 
   display: flex;
@@ -97,6 +133,7 @@ const DeviceContainer = styled.div`
   height: 162px;
 `;
 
+// 점 이미지
 const DotImage = styled.div`
   position: absolute;
   display: flex;
@@ -110,6 +147,7 @@ const DotImage = styled.div`
   z-index: 10;
 `;
 
+// 기기 이미지
 const DeviceImage = styled.div`
   display: flex;
   justify-content: center;
@@ -118,6 +156,7 @@ const DeviceImage = styled.div`
   height: 120px;
 `;
 
+// 경고 아이콘
 const WarningIcon = styled.img`
   position: absolute;
   top: 20px;
@@ -125,6 +164,22 @@ const WarningIcon = styled.img`
   width: 32px;
   height: 32px;
 
-  background: #E06C60;
+  background: #e06c60;
   border-radius: 8px;
+`;
+
+// 삭제 채크박스
+const DeleteCheckbox = styled.div<{ isSelected: boolean }>`
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  left: 14px;
+  top: 14px;
+
+  background: ${(props) => (props.isSelected ? "#ffffff" : "#393939")};
+  border: 1px solid #FFFFFF;
+  border-radius: 8px;
+  cursor: pointer;
+
+  z-index: 10;
 `;

@@ -1,29 +1,41 @@
 import styled from "@emotion/styled";
-import DeviceCard from "../../components/deviceCard";
+import DeviceCard from "../../components/DeviceCard";
 import DeviceDeleteButton from "../../components/DeviceDeleteButton";
 import DeviceAddCard from "../../components/DeviceAddCard";
+import useDeleteMode from "../../hooks/useDeleteMode";
+import DeleteButton from "../../components/DeleteButton";
+
+const devices = Array.from({ length: 11 }, (_, i) => ({
+  id: `device-${i + 1}`,
+  name: `기기 ${i + 1}`,
+  temperature: 10000,
+  warning: i === 0,
+}));
 
 function Home() {
+  const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection } = useDeleteMode();
+
   return (
     <HomeContainer>
       <Header>
         <DeviceText>연결된 기기</DeviceText>
-        <DeviceDeleteButton />
+        <DeviceDeleteButton onClick={() => toggleDeleteMode(devices.map(device => device.id))} isDeleteMode={isDeleteMode} />
       </Header>
       <CardGrid>
         <DeviceAddCard />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={true} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
-        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        {devices.map((device) => (
+          <DeviceCard
+            key={device.id}
+            deviceName={device.name}
+            temperature={device.temperature}
+            warning={device.warning}
+            isDeleteMode={isDeleteMode}
+            isSelected={selectedItems.includes(device.id)}
+            onSelect={() => toggleItemSelection(device.id)}
+          />
+        ))}
       </CardGrid>
+      {selectedItems.length > 0 && <DeleteButton onClick={() => toggleDeleteMode([])} />}
     </HomeContainer>
   );
 }
