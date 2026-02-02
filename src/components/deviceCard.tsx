@@ -1,15 +1,18 @@
 import styled from "@emotion/styled";
 import dot from "../assets/dot.svg";
 import device from "../assets/device.svg";
+import warningIcon from "../assets/warning.svg"
 
 interface DeviceCardProps {
   deviceName: string,
   temperature: number;
+  warning: boolean;
 }
 
-export default function DeviceCard({ deviceName, temperature }: DeviceCardProps) {
+export default function DeviceCard({ deviceName, temperature, warning }: DeviceCardProps) {
   return (
     <CardContainer>
+      {warning && <WarningIcon src={warningIcon} alt="warning" />}
       <DotImage>
         <img src={dot} alt="dot" />
       </DotImage>
@@ -113,4 +116,15 @@ const DeviceImage = styled.div`
   align-items: center;
   width: 120px;
   height: 120px;
+`;
+
+const WarningIcon = styled.img`
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 32px;
+  height: 32px;
+
+  background: #E06C60;
+  border-radius: 8px;
 `;

@@ -12,17 +12,17 @@ function Home() {
       </Header>
       <CardGrid>
         <DeviceAddCard />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
-        <DeviceCard deviceName="기기 1" temperature={10000} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={true} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
+        <DeviceCard deviceName="기기 1" temperature={10000} warning={false} />
       </CardGrid>
     </HomeContainer>
   );
@@ -50,12 +50,12 @@ const Header = styled.div`
 
 const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 2fr);
+  grid-template-columns: repeat(4, 1fr);
   max-width: 1102px;
   gap: 40px;
   position: absolute;
   width: 1104px;
-  height: 1264px;
+  height: auto;
   left: 624px;
   top: 170px;
 `;
