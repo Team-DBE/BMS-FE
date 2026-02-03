@@ -12,7 +12,7 @@ interface DeviceCardProps {
   onSelect: () => void;
 }
 
-export default function DeviceCard({ deviceName, temperature, warning, isDeleteMode, isSelected, onSelect }: DeviceCardProps) {
+export default function DeviceCardItem({ deviceName, temperature, warning, isDeleteMode, isSelected, onSelect }: DeviceCardProps) {
   return (
     <CardContainer>
       {isDeleteMode ? <label onClick={onSelect}><DeleteCheckbox isSelected={isSelected} /></label> : warning && <WarningIcon src={warningIcon} alt="warning" />}

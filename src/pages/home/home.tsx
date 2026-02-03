@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import DeviceCard from "../../components/DeviceCard.tsx";
+import DeviceCardItem from "../../components/DeviceCardItem.tsx";
 import DeviceDeleteButton from "../../components/DeviceDeleteButton";
 import DeviceAddCard from "../../components/DeviceAddCard";
 import useDeleteMode from "../../hooks/useDeleteMode";
@@ -24,7 +24,7 @@ function Home() {
       <CardGrid>
         <DeviceAddCard />
         {devices.map((device) => (
-          <DeviceCard
+          <DeviceCardItem
             key={device.id}
             deviceName={device.name}
             temperature={device.temperature}
