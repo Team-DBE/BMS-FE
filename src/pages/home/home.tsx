@@ -8,7 +8,7 @@ import DeleteButton from "../../components/DeleteButton";
 const devices = Array.from({ length: 11 }, (_, i) => ({
   id: `device-${i + 1}`,
   name: `기기 ${i + 1}`,
-  temperature: 10000,
+  temperature: Math.floor(Math.random() * 100),
   warning: i === 0,
 }));
 
@@ -28,7 +28,7 @@ function Home() {
             key={device.id}
             deviceName={device.name}
             temperature={device.temperature}
-            warning={device.warning}
+            warning={device.temperature > 70}
             isDeleteMode={isDeleteMode}
             isSelected={selectedItems.includes(device.id)}
             onSelect={() => toggleItemSelection(device.id)}
