@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getAll, toggleItem } from "../utils/DeleteModeUtils";
+import { getAll, toggleItem } from "../utils/deleteModeUtils";
 
 export default function useDeleteMode() {
   const [isDeleteMode, setIsDeleteMode] = useState(false);
