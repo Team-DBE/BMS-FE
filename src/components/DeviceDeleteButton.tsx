@@ -1,16 +1,21 @@
 import styled from "@emotion/styled";
 import trahscan from "../assets/trashcan.svg";
 
-export default function DeviceDeleteButton() {
+interface DeviceDeleteButtonProps {
+  onClick: () => void;
+  isDeleteMode: boolean;
+}
+
+export default function DeviceDeleteButton({ onClick, isDeleteMode }: DeviceDeleteButtonProps) {
   return (
-    <ButtonContainer>
-      <img src={trahscan} alt="Trashcan" />
-      <p>기기삭제</p>
+    <ButtonContainer onClick={onClick} isDeleteMode={isDeleteMode}>
+      {isDeleteMode ? null : <img src={trahscan} alt="Trashcan" />}
+      <p>{isDeleteMode ? "전체선택" : "기기삭제"}</p>
     </ButtonContainer>
   );
 }
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<{ isDeleteMode: boolean }>`
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -18,7 +23,7 @@ const ButtonContainer = styled.div`
 	padding: 10px 16px;
 	gap: 10px;
 
-	width: 127px;
+	width: ${(props) => (props.isDeleteMode ? "93px" : "127px")};
 	height: 46px;
 
 	background: #454C53;
