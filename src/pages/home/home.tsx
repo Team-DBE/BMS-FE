@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import DeviceCard from "../../components/DeviceCard";
+import DeviceCard from "../../components/DeviceCard.tsx";
 import DeviceDeleteButton from "../../components/DeviceDeleteButton";
 import DeviceAddCard from "../../components/DeviceAddCard";
 import useDeleteMode from "../../hooks/useDeleteMode";
