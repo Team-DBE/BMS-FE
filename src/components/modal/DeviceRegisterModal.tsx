@@ -1,26 +1,46 @@
 import styled from "@emotion/styled";
 
-export default function DeviceRegisterModal() {
+interface DeviceRegisterModalProps {
+	onClose?: () => void;
+}
+
+export default function DeviceRegisterModal({onClose}: DeviceRegisterModalProps) {
+	
 	return (
-		<ModalContainer>
-			<Title>일련번호</Title>
-			<InputContainer />
-		</ModalContainer>
+		<Overlay onClick={onClose}>
+			<ModalContainer onClick={(e)=>e.stopPropagation()}>
+				<Title>기기등록</Title>
+				<InputContainer type="text" placeholder="기기의 일련번호를 입력해주세요" />
+			</ModalContainer>
+	</Overlay>
 	)
 }
 
+const Overlay = styled.div`
+	position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  background-color:#00000066;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  z-index: 1000;
+`;
+
 const ModalContainer = styled.div`
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+	justify-content	: center;
 	padding: 53px 28px;
 	gap: 27px;
-
+	
 	position: relative;
 	width: 400px;
 	height: 257px;
-	left: calc(50% - 400px/2 + 581px);
-	top: calc(50% - 257px/2 + 260.5px);
 
 	background: #222527;
 	border: 1px solid rgba(255, 255, 255, 0.1);
@@ -30,16 +50,12 @@ const ModalContainer = styled.div`
 const Title = styled.h1`
 	width: 344px;
 	height: 44px;
-	flex: none;
-	order: 0;
-	align-self: stretch;
-	flex-grow: 0;
 
 	position: absolute;
 	width: 122px;
 	height: 44px;
 	left: calc(50% - 122px/2);
-	top: 0px;
+	top: 53px;
 
 	font-family: 'Pretendard';
 	font-style: normal;
@@ -52,11 +68,42 @@ const Title = styled.h1`
 	color: #FFFFFF;
 `;
 
-const InputContainer = styled.div`
+const InputContainer = styled.input`
+	padding: 22px 50px;
+
+	position: absolute;
+	bottom: 53px;
 	width: 344px;
 	height: 80px;
 
 	background: #393939;
 	border: 1px solid rgba(0, 0, 0, 0.1);
 	border-radius: 6px;
+
+	font-family: 'Pretendard';
+	font-style: normal;
+	font-weight: 500;
+	font-size: 32px;
+	line-height: 36px;
+	letter-spacing: -0.025em;
+
+	color: #FFFFFF;
+
+
+	::placeholder {
+		position: absolute;
+		width: 245px;
+		height: 36px;
+		left: calc(50% - 245px/2 + 0.5px);
+		top: 26px;
+
+		font-family: 'Pretendard';
+		font-style: normal;
+		font-weight: 500;
+		font-size: 20px;
+		line-height: 36px;
+		letter-spacing: -0.025em;
+
+		color: #ABABAB;
+	}
 `;

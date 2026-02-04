@@ -1,19 +1,26 @@
 import styled from "@emotion/styled";
 import warningIcon from "../../assets/ModalWarning.svg";
 
-export default function WarningModal() {
+interface WarningModalProps {
+	deviceName?: string;
+	deviceTemp?: number;
+	checkWarning?: () => void;
+}
+
+
+export default function WarningModal({ deviceName, deviceTemp, checkWarning }: WarningModalProps) {
 	return (
 		<Overlay>
-			<ModalContainer>
+			<ModalContainer onClick={(e)=>e.stopPropagation()}>
 				<WarningDescriptionContainer>
 					<WarningIcon src={warningIcon} alt="Warning Icon" />
 					<Description>
 						<h1>Warning</h1>
-						<p>현재 기기1의 온도가 75∘C 이상입니다
+						<p>현재 {deviceName}의 온도가 {deviceTemp}∘C 이상입니다
 							기기의 상태를 확인 해주세요</p>
 					</Description>
 				</WarningDescriptionContainer>
-				<Checkbutton>바로 확인하기</Checkbutton>
+				<Checkbutton onClick={checkWarning}>바로 확인하기</Checkbutton>
 			</ModalContainer>
 		</Overlay>
 	)

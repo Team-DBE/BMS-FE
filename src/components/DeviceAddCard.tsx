@@ -1,9 +1,13 @@
 import styled from "@emotion/styled";
 import plus from "../assets/+.svg";
 
-export default function DeviceAddCard() {
+interface DeviceAddCardProps {
+	onClick: () => void;
+}
+
+export default function DeviceAddCard({ onClick }: DeviceAddCardProps) {
 	return (
-		<AddCardContainer>
+		<AddCardContainer onClick={onClick}>
 			<img src={plus} alt="Add Device" />
 		</AddCardContainer>
 	);

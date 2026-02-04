@@ -22,7 +22,9 @@ export default function useDeleteMode() {
 
   return {
     isDeleteMode,
+    setIsDeleteMode,
     selectedItems,
+    setSelectedItems,
     toggleDeleteMode,
     toggleItemSelection,
   };
