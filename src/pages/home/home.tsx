@@ -4,16 +4,15 @@ import DeviceDeleteButton from "../../components/DeviceDeleteButton";
 import DeviceAddCard from "../../components/DeviceAddCard";
 import useDeleteMode from "../../hooks/useDeleteMode";
 import DeleteButton from "../../components/DeleteButton";
-
-const devices = Array.from({ length: 11 }, (_, i) => ({
-  id: `device-${i + 1}`,
-  name: `기기 ${i + 1}`,
-  temperature: Math.floor(Math.random() * 100),
-  warning: i === 0,
-}));
+import useDeviceAddMode from "../../hooks/useDeviceAddMode";
+import DeviceRegisterModal from "../../components/modal/DeviceRegisterModal.tsx";
+import WarningModal from "../../components/modal/WarningModal.tsx";
+import useDevices from "../../hooks/useDeviceData.ts";
 
 function Home() {
-  const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection } = useDeleteMode();
+  const { devices, checkWarning } = useDevices();
+  const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection, setIsDeleteMode, setSelectedItems } = useDeleteMode();
+  const { isAddMode, toggleAddMode, setIsAddMode } = useDeviceAddMode();
 
   return (
     <HomeContainer>
@@ -22,7 +21,7 @@ function Home() {
         <DeviceDeleteButton onClick={() => toggleDeleteMode(devices.map(device => device.id))} isDeleteMode={isDeleteMode} />
       </Header>
       <CardGrid>
-        <DeviceAddCard />
+        <DeviceAddCard onClick={() => toggleAddMode()} />
         {devices.map((device) => (
           <DeviceCardItem
             key={device.id}
@@ -35,7 +34,9 @@ function Home() {
           />
         ))}
       </CardGrid>
-      {selectedItems.length > 0 && <DeleteButton onClick={() => toggleDeleteMode([])} />}
+      {devices.some(device => device.warning) && <WarningModal deviceName={devices.find(device => device.warning)?.name} deviceTemp={devices.find(device => device.warning)?.temperature} checkWarning={() => checkWarning(devices.find(device => device.warning)?.id || '')} />}
+      {isAddMode && <DeviceRegisterModal onClose={() => setIsAddMode(false)} />}
+      {selectedItems.length > 0 && <DeleteButton onClick={() => { setIsDeleteMode(false); setSelectedItems([]); }} />}
     </HomeContainer>
   );
 }
