@@ -2,15 +2,22 @@ import styled from "@emotion/styled";
 
 interface DeviceRegisterModalProps {
 	onClose?: () => void;
+	addDevice?: (id: string) => void;
 }
 
-export default function DeviceRegisterModal({onClose}: DeviceRegisterModalProps) {
-	
+export default function DeviceRegisterModal({onClose, addDevice}: DeviceRegisterModalProps) {
+	const handleAddDevice = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter' && addDevice) {
+			addDevice?.(e.currentTarget.value);
+			if (onClose) onClose();
+		}
+	};
+
 	return (
 		<Overlay onClick={onClose}>
 			<ModalContainer onClick={(e)=>e.stopPropagation()}>
 				<Title>기기등록</Title>
-				<InputContainer type="text" placeholder="기기의 일련번호를 입력해주세요" />
+				<InputContainer type="text" placeholder="기기의 일련번호를 입력해주세요" onKeyDown={handleAddDevice} />
 			</ModalContainer>
 	</Overlay>
 	)

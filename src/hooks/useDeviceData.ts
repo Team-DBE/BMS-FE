@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Devices = () => Array.from({ length: 11 }, (_, i) => {
+const Devices = () => Array.from({ length: 5 }, (_, i) => {
   const temp = Math.floor(Math.random() * 100);
   return {
     id: `device-${i + 1}`,
@@ -26,6 +26,10 @@ export default function useDevices() {
     setDevices(prev => [...prev, newDevice]);
   };
 
+  const deleteDevice = (id: string) => {
+    setDevices(prev => prev.filter(device => device.id !== id));
+  }
+
   const checkWarning = (id: string) => {
     setDevices(prev => prev.map(device => 
       device.id === id ? { ...device, warning: false } : device
@@ -36,6 +40,7 @@ export default function useDevices() {
     devices, 
     warningDevice,
     addDevice, 
-    checkWarning 
+    checkWarning,
+    deleteDevice
   };
 }

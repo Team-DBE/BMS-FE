@@ -2,6 +2,8 @@ import styled from "@emotion/styled";
 import dot from "../assets/dot.svg";
 import device from "../assets/device.svg";
 import warningIcon from "../assets/warning.svg";
+import DeviceDetail from "./DeviceDetail";
+import useDeviceDetail from "../hooks/useDeviceDetail";
 
 interface DeviceCardProps {
   deviceName: string;
@@ -12,23 +14,47 @@ interface DeviceCardProps {
   onSelect: () => void;
 }
 
-export default function DeviceCardItem({ deviceName, temperature, warning, isDeleteMode, isSelected, onSelect }: DeviceCardProps) {
+export default function DeviceCardItem({
+  deviceName,
+  temperature,
+  warning,
+  isDeleteMode,
+  isSelected,
+  onSelect,
+}: DeviceCardProps) {
+  const { isDetailVisible, toggleDetailVisibility } = useDeviceDetail();
+
   return (
-    <CardContainer>
-      {isDeleteMode ? <label onClick={onSelect}><DeleteCheckbox isSelected={isSelected} /></label> : warning && <WarningIcon src={warningIcon} alt="warning" />}
-      <DotImage>{isDeleteMode ? null : <img src={dot} alt="dot" />}</DotImage>
-      <DeviceContainer className="device">
-        <DeviceImage>
-          <img src={device} alt="device" />
-        </DeviceImage>
-        <p>{deviceName}</p>
-      </DeviceContainer>
-      <TemperatureContainer className="temp">
-        <p>{temperature}°C</p>
-      </TemperatureContainer>
-    </CardContainer>
+    <Container>
+      <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} />
+      <CardContainer>
+        {isDeleteMode ? (
+          <label onClick={onSelect}>
+            <DeleteCheckbox isSelected={isSelected} />
+          </label>
+        ) : (
+          warning && <WarningIcon src={warningIcon} alt="warning" />
+        )}
+        <DotImage onClick={toggleDetailVisibility} className="menu-trigger">{isDeleteMode ? null : <img src={dot} alt="dot" />}</DotImage>
+        <DeviceContainer className="device">
+          <DeviceImage>
+            <img src={device} alt="device" />
+          </DeviceImage>
+          <p>{deviceName}</p>
+        </DeviceContainer>
+        <TemperatureContainer className="temp">
+          <p>{temperature}°C</p>
+        </TemperatureContainer>
+      </CardContainer>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  position: relative;
+  width: 240px;
+  height: 286px;
+`;
 
 // 온도 컨테이너
 const TemperatureContainer = styled.div`
@@ -73,16 +99,17 @@ const CardContainer = styled.div`
   border: 1px solid #ffffff1a;
   border-radius: 12px;
   transition: 0.3s;
+
   :hover {
     transform: translateY(-15px);
-    background: #454C53;
-    
+    background: #454c53;
+
     .temp {
-      background: #72787F;
+      background: #72787f;
     }
     .temp {
       p {
-        font-family: 'Pretendard';
+        font-family: "Pretendard";
         font-style: normal;
         font-weight: 600;
         font-size: 26px;
@@ -93,11 +120,11 @@ const CardContainer = styled.div`
         width: 204px;
         height: 32px;
 
-        font-family: 'Pretendard';
+        font-family: "Pretendard";
         font-style: normal;
         font-weight: 600;
         font-size: 26px;
-        color: #FDF3F3;
+        color: #fdf3f3;
       }
     }
   }
@@ -177,7 +204,7 @@ const DeleteCheckbox = styled.div<{ isSelected: boolean }>`
   top: 14px;
 
   background: ${(props) => (props.isSelected ? "#ffffff" : "#393939")};
-  border: 1px solid #FFFFFF;
+  border: 1px solid #ffffff;
   border-radius: 8px;
   cursor: pointer;
 
