@@ -21,7 +21,10 @@ export default function DeviceDetail({ isVisible, onClose }: DeviceDetailProps) 
       if (target.closest(".menu-trigger")) {
         return;
       }
-      onClose && onClose();
+      
+      if (onClose) {
+        onClose();
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
