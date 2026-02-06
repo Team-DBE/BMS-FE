@@ -47,6 +47,7 @@ export default function DeviceCardItem({
       }
       updateDeviceName(id, newName);
       setIsEditing(false);
+      toggleDetailVisibility();
     }
   };
 
