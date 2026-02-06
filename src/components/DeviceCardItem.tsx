@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { useState, useRef, useEffect } from "react";
 import dot from "../assets/dot.svg";
 import device from "../assets/device.svg";
 import warningIcon from "../assets/warning.svg";
@@ -12,6 +13,8 @@ interface DeviceCardProps {
   isDeleteMode: boolean;
   isSelected: boolean;
   onSelect: () => void;
+  id: string;
+  updateDeviceName: (id: string, newName: string) => void;
 }
 
 export default function DeviceCardItem({
@@ -21,12 +24,35 @@ export default function DeviceCardItem({
   isDeleteMode,
   isSelected,
   onSelect,
+  id,
+  updateDeviceName
 }: DeviceCardProps) {
   const { isDetailVisible, toggleDetailVisibility } = useDeviceDetail();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
+
+  const enterHandle = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const newName = (e.target as HTMLInputElement).value;
+      if (newName.trim().length > 8) {
+        alert("별명은 최대 8자까지 가능합니다.")
+        return;
+      }
+      updateDeviceName(id, newName);
+      setIsEditing(false);
+    }
+  };
 
   return (
     <Container>
-      <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} />
+      <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} setIsEditing={setIsEditing} />
       <CardContainer>
         {isDeleteMode ? (
           <label onClick={onSelect}>
@@ -40,7 +66,7 @@ export default function DeviceCardItem({
           <DeviceImage>
             <img src={device} alt="device" />
           </DeviceImage>
-          <p>{deviceName}</p>
+          <p>{isEditing ? (<EditNameInput ref={inputRef} type="text" defaultValue={deviceName} onKeyDown={enterHandle} onBlur={() => setIsEditing(false)} />) : (deviceName)}</p>
         </DeviceContainer>
         <TemperatureContainer className="temp">
           <p>{temperature}°C</p>
@@ -209,4 +235,19 @@ const DeleteCheckbox = styled.div<{ isSelected: boolean }>`
   cursor: pointer;
 
   z-index: 10;
+`;
+
+// 별명 수정
+const EditNameInput = styled.input`
+  width: 150px;
+  height: 30px;
+
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 26px;
+  color: #fdf3f3;
+
+  background: none;
+  border: none;
 `;

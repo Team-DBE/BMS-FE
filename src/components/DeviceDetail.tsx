@@ -4,9 +4,10 @@ import { useEffect, useRef } from "react";
 interface DeviceDetailProps {
   isVisible: boolean;
   onClose?: () => void;
+  setIsEditing?: (isEditing: boolean) => void;
 }
 
-export default function DeviceDetail({ isVisible, onClose }: DeviceDetailProps) {
+export default function DeviceDetail({ isVisible, onClose, setIsEditing }: DeviceDetailProps) {
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function DeviceDetail({ isVisible, onClose }: DeviceDetailProps) 
 
   return (
       <Container ref={menuRef} isVisible={isVisible} onClick={(e) => e.stopPropagation()}>
-        <Category>별명 수정</Category>
+        <Category onClick={() => setIsEditing && setIsEditing(true)} >별명 수정</Category>
         <Category>페이지 이동</Category>
         <Category>일련번호</Category>
       </Container>
@@ -56,7 +57,7 @@ const Container = styled.div<DeviceDetailProps>`
   height: 88px;
 
   background: #26282b;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid #72787F;
   border-radius: 8px;
   z-index: 100;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};

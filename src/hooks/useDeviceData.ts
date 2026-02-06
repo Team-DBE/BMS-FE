@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AddDevice } from "../utils/deviceDataUtils";
 
 const Devices = () => Array.from({ length: 5 }, (_, i) => {
   const temp = Math.floor(Math.random() * 100);
@@ -10,19 +11,13 @@ const Devices = () => Array.from({ length: 5 }, (_, i) => {
   };
 });
 
-export default function useDevices() {
+export default function useDeviceData() {
   const [devices, setDevices] = useState(Devices);
 
   const warningDevice = devices.find(device => device.warning);
 
   const addDevice = (name: string) => {
-		const temp = Math.floor(Math.random() * 100);
-    const newDevice = {
-      id: `device-${Date.now()}`,
-      name,
-      temperature: temp,
-      warning: temp > 70, 
-    };
+    const newDevice = AddDevice(name); 
     setDevices(prev => [...prev, newDevice]);
   };
 
@@ -36,11 +31,18 @@ export default function useDevices() {
     ));
   };
 
+  const updateDeviceName = (id: string, newName: string) => {
+    setDevices(prev => prev.map(device => 
+      device.id === id ? { ...device, name: newName } : device
+    ));
+  };
+
   return { 
     devices, 
     warningDevice,
     addDevice, 
     checkWarning,
-    deleteDevice
+    deleteDevice,
+    updateDeviceName
   };
 }
