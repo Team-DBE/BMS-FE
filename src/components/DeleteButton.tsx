@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import trahscan from "../assets/trashcan.svg";
+import trashcanIcon from "../assets/trashcan.svg";
 
 interface DeleteButtonProps {
 	onClick: () => void;
@@ -8,13 +8,13 @@ interface DeleteButtonProps {
 export default function DeleteButton({ onClick }: DeleteButtonProps) {
 	return (
 		<ButtonContainer onClick={onClick}>
-			<TrashcanImage src={trahscan} alt="Trashcan" />
+			<TrashcanImage src={trashcanIcon} alt="Trashcan" />
 			<p>삭제</p>
 		</ButtonContainer>
 	);
 }
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.button`
 	display: flex;
 	flex-direction: row;
 	justify-content: center;

@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import trahscan from "../assets/trashcan.svg";
+import trashcanIcon from "../assets/trashcan.svg";
 
 interface DeviceDeleteButtonProps {
   onClick: () => void;
@@ -9,13 +9,13 @@ interface DeviceDeleteButtonProps {
 export default function DeviceDeleteButton({ onClick, isDeleteMode }: DeviceDeleteButtonProps) {
   return (
     <ButtonContainer onClick={onClick} isDeleteMode={isDeleteMode}>
-      {isDeleteMode ? null : <img src={trahscan} alt="Trashcan" />}
+      {isDeleteMode ? null : <img src={trashcanIcon} alt="Trashcan" />}
       <p>{isDeleteMode ? "전체선택" : "기기삭제"}</p>
     </ButtonContainer>
   );
 }
 
-const ButtonContainer = styled.div<{ isDeleteMode: boolean }>`
+const ButtonContainer = styled.button<{ isDeleteMode: boolean }>`
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
