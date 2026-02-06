@@ -22,7 +22,7 @@ export default function DeviceDetail({ isVisible, onClose, setIsEditing }: Devic
       if (target.closest(".menu-trigger")) {
         return;
       }
-      
+
       if (onClose) {
         onClose();
       }
@@ -35,15 +35,15 @@ export default function DeviceDetail({ isVisible, onClose, setIsEditing }: Devic
   }, [isVisible, onClose]);
 
   return (
-      <Container ref={menuRef} isVisible={isVisible} onClick={(e) => e.stopPropagation()}>
-        <Category onClick={() => setIsEditing && setIsEditing(true)} >별명 수정</Category>
-        <Category>페이지 이동</Category>
-        <Category>일련번호</Category>
-      </Container>
+    <Container ref={menuRef} isVisible={isVisible} onClick={(e) => e.stopPropagation()}>
+      <Category onClick={() => setIsEditing && setIsEditing(true)}>별명 수정</Category>
+      <Category>페이지 이동</Category>
+      <Category>일련번호</Category>
+    </Container>
   );
 }
 
-const Container = styled.div<DeviceDetailProps>`
+const Container = styled.div<{ isVisible: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -57,7 +57,7 @@ const Container = styled.div<DeviceDetailProps>`
   height: 88px;
 
   background: #26282b;
-  border: 1px solid #72787F;
+  border: 1px solid #72787f;
   border-radius: 8px;
   z-index: 100;
   opacity: ${(props) => (props.isVisible ? 1 : 0)};

@@ -20,7 +20,7 @@ export default function WarningModal({ deviceName, deviceTemp, checkWarning }: W
 							기기의 상태를 확인 해주세요</p>
 					</Description>
 				</WarningDescriptionContainer>
-				<Checkbutton onClick={checkWarning}>바로 확인하기</Checkbutton>
+				<CheckButton onClick={checkWarning}>바로 확인하기</CheckButton>
 			</ModalContainer>
 		</Overlay>
 	)
@@ -119,7 +119,7 @@ const Description = styled.div`
 `;
 
 // 확인 버튼 
-const Checkbutton = styled.div`
+const CheckButton = styled.button`
 	display: flex;
 	flex-direction: row;
 	align-items: center;

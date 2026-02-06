@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import plus from "../assets/+.svg";
+import plusIcon from "../assets/+.svg";
 
 interface DeviceAddCardProps {
 	onClick: () => void;
@@ -8,12 +8,12 @@ interface DeviceAddCardProps {
 export default function DeviceAddCard({ onClick }: DeviceAddCardProps) {
 	return (
 		<AddCardContainer onClick={onClick}>
-			<img src={plus} alt="Add Device" />
+			<img src={plusIcon} alt="Add Device" />
 		</AddCardContainer>
 	);
 }
 
-const AddCardContainer = styled.div`
+const AddCardContainer = styled.button`
 	display: flex;
 	justify-content: center;
 	align-items: center;

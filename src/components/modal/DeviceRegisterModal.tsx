@@ -3,22 +3,22 @@ import styled from "@emotion/styled";
 interface DeviceRegisterModalProps {
   onClose?: () => void;
   addDevice?: (id: string) => void;
-  devices: number;
+  deviceCount: number;
 }
 
-export default function DeviceRegisterModal({ onClose, addDevice, devices }: DeviceRegisterModalProps) {
+export default function DeviceRegisterModal({ onClose, addDevice, deviceCount }: DeviceRegisterModalProps) {
   const handleAddDevice = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && addDevice) {
-      addDevice?.(`기기 ${devices + 1}`);
-      if (onClose) onClose();
-    }
+    if (e.key !== "Enter") return;
+
+    addDevice?.(`기기 ${deviceCount + 1}`);
+    onClose?.();
   };
 
   return (
     <Overlay onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <Title>기기등록</Title>
-        <InputContainer type="text" placeholder="기기의 일련번호를 입력해주세요" onKeyDown={handleAddDevice} />
+        <DeviceInput type="text" placeholder="기기의 일련번호를 입력해주세요" onKeyDown={handleAddDevice} />
       </ModalContainer>
     </Overlay>
   );
@@ -76,7 +76,7 @@ const Title = styled.h1`
   color: #ffffff;
 `;
 
-const InputContainer = styled.input`
+const DeviceInput = styled.input`
   padding: 22px 50px;
 
   position: absolute;

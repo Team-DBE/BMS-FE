@@ -6,9 +6,9 @@ export const getAll = (selectedItems: string[], allIds: string[]) => {
 	}
 }; 
 
-export const toggleItem = (prev: string[], Id: string) => {
-	if (prev.includes(Id)) 
-		return prev.filter((item) => item !== Id); 
+export const toggleItem = (prev: string[], id: string) => {
+	if (prev.includes(id)) 
+		return prev.filter((item) => item !== id); 
 	else
-		return [...prev, Id];
+		return [...prev, id];
 };

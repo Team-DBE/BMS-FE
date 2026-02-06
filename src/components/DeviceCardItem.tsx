@@ -77,7 +77,7 @@ export default function DeviceCardItem({
   );
 }
 
-const Container = styled.div`
+const Container = styled.button`
   position: relative;
   width: 240px;
   height: 286px;
@@ -188,7 +188,7 @@ const DeviceContainer = styled.div`
 `;
 
 // 점 이미지
-const DotImage = styled.div`
+const DotImage = styled.button`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -223,7 +223,7 @@ const WarningIcon = styled.img`
 `;
 
 // 삭제 채크박스
-const DeleteCheckbox = styled.div<{ isSelected: boolean }>`
+const DeleteCheckbox = styled.button<{ isSelected: boolean }>`
   position: absolute;
   width: 32px;
   height: 32px;

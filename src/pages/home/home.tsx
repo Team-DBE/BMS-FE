@@ -47,7 +47,7 @@ function Home() {
           checkWarning={() => checkWarning(devices.find((device) => device.warning)?.id || "")}
         />
       )}
-      {isAddMode && <DeviceRegisterModal onClose={() => setIsAddMode(false)} addDevice={addDevice} devices={devices.length} />}
+      {isAddMode && <DeviceRegisterModal onClose={() => setIsAddMode(false)} addDevice={addDevice} deviceCount={devices.length} />}
       {selectedItems.length > 0 && (
         <DeleteButton
           onClick={() => {

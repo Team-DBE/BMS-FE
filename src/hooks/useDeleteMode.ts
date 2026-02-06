@@ -14,9 +14,9 @@ export default function useDeleteMode() {
     }
   };
 
-  const toggleItemSelection = (Id: string) => {
+  const toggleItemSelection = (id: string) => {
     setSelectedItems((prev) => {
-      return toggleItem(prev, Id);
+      return toggleItem(prev, id);
     });
   };
 
