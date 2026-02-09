@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const registerDevice = async (serialNumber: string) => {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/`, {
+	const baseUrl = import.meta.env.VITE_API_BASE_URL;
+  const response = await fetch(`${baseUrl}/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
