@@ -1,4 +1,6 @@
 import styled from "@emotion/styled";
+import { useRegisterDevice } from "../../apis/devices";
+import { useEffect } from "react";
 
 interface DeviceRegisterModalProps {
   onClose?: () => void;
@@ -7,11 +9,28 @@ interface DeviceRegisterModalProps {
 }
 
 export default function DeviceRegisterModal({ onClose, addDevice, deviceCount }: DeviceRegisterModalProps) {
-  const handleAddDevice = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key !== "Enter") return;
+  const { mutate, isPending } = useRegisterDevice();
 
-    addDevice?.(`기기 ${deviceCount + 1}`);
-    onClose?.();
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose?.();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  const handleAddDevice = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter" || isPending) return;
+
+    mutate((e.target as HTMLInputElement).value, {
+      onSuccess: () => {
+        addDevice?.(`기기 ${deviceCount + 1}`);
+        onClose?.();
+      },
+    });
   };
 
   return (
