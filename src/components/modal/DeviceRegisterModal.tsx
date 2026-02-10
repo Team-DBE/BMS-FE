@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { useRegisterDevice } from "../../apis/devices";
+import { useEffect } from "react";
 
 interface DeviceRegisterModalProps {
   onClose?: () => void;
@@ -9,6 +10,17 @@ interface DeviceRegisterModalProps {
 
 export default function DeviceRegisterModal({ onClose, addDevice, deviceCount }: DeviceRegisterModalProps) {
   const { mutate, isPending } = useRegisterDevice();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose?.();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   const handleAddDevice = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter" || isPending) return;
