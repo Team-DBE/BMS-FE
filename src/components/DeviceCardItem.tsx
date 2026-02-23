@@ -77,7 +77,7 @@ export default function DeviceCardItem({
   );
 }
 
-const Container = styled.button`
+const Container = styled.div`
   position: relative;
   width: 240px;
   height: 286px;

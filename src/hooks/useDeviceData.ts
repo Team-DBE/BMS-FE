@@ -1,19 +1,26 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import type { Device } from "../types/device";
 
-const createDevices = (): Device[] =>
-  Array.from({ length: 5 }, (_, i) => {
-    const temp = Math.floor(Math.random() * 100);
-    return {
-      id: `device-${i + 1}`,
-      name: `기기 ${i + 1}`,
-      temperature: temp,
-      warning: temp > 70, // 70도 넘으면 경고
-    };
-  });
-
 export default function useDeviceData() {
-  const [devices, setDevices] = useState<Device[]>(createDevices);
+  const [devices, setDevices] = useState<Device[]>(() => {
+    const savedNames = JSON.parse(localStorage.getItem("deviceNames") || "{}");
+    // if (savedNames) {
+    //   return JSON.parse(savedNames);
+    // }
+    // return [];
+
+    // 더미데이터 생성
+    return Array.from({ length: 5 }, (_, i) => {
+      const id = `device-${i + 1}`;
+      const temp = Math.floor(Math.random() * 100);
+      return {
+        id,
+        name: savedNames[id] || `기기 ${i + 1}`,
+        temperature: temp,
+        warning: temp > 70, // 70도 넘으면 경고
+      };
+    });
+  });
 
   const warningDevice = devices.find((device) => device.warning);
 
@@ -39,7 +46,17 @@ export default function useDeviceData() {
 
   const updateDeviceName = (id: string, newName: string) => {
     setDevices((prev) => prev.map((device) => (device.id === id ? { ...device, name: newName } : device)));
+    localStorage.setItem(
+      "deviceNames",
+      JSON.stringify({ ...JSON.parse(localStorage.getItem("deviceNames") || "{}"), [id]: newName }),
+    );
   };
+
+  const warningDevices = useMemo(() => {
+    const warningDevices = devices.filter((device) => device.temperature > 70);
+    const normalDevices = devices.filter((device) => device.temperature <= 70);
+    return [...warningDevices, ...normalDevices];
+  }, [devices]);
 
   return {
     devices,
@@ -48,5 +65,6 @@ export default function useDeviceData() {
     checkWarning,
     deleteDevice,
     updateDeviceName,
+    warningDevices,
   };
 }
