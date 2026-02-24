@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useRegisterDevice } from "../../apis/devices";
+import { useCheckDevice } from "../../apis/devices";
 import { useEffect } from "react";
 
 interface DeviceRegisterModalProps {
@@ -9,7 +9,7 @@ interface DeviceRegisterModalProps {
 }
 
 export default function DeviceRegisterModal({ onClose, addDevice, deviceCount }: DeviceRegisterModalProps) {
-  const { mutate, isPending } = useRegisterDevice();
+  const { mutate, isPending } = useCheckDevice();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
