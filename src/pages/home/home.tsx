@@ -10,7 +10,7 @@ import WarningModal from "../../components/modal/WarningModal.tsx";
 import useDeviceData from "../../hooks/useDeviceData.ts";
 
 function Home() {
-  const { devices, checkWarning, deleteDevice, addDevice, updateDeviceName } = useDeviceData();
+  const { devices, checkWarning, deleteDevice, addDevice, updateDeviceName, warningDevices } = useDeviceData();
   const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection, setIsDeleteMode, setSelectedItems } =
     useDeleteMode();
   const { isAddMode, toggleAddMode, setIsAddMode } = useDeviceAddMode();
@@ -26,7 +26,7 @@ function Home() {
       </Header>
       <CardGrid>
         <DeviceAddCard onClick={() => toggleAddMode()} />
-        {devices.map((device) => (
+        {warningDevices.map((device) => (
           <DeviceCardItem
             key={device.id}
             id={device.id}
@@ -40,14 +40,16 @@ function Home() {
           />
         ))}
       </CardGrid>
-      {devices.some((device) => device.warning) && (
+      {warningDevices.some((device) => device.warning) && (
         <WarningModal
-          deviceName={devices.find((device) => device.warning)?.name}
-          deviceTemp={devices.find((device) => device.warning)?.temperature}
-          checkWarning={() => checkWarning(devices.find((device) => device.warning)?.id || "")}
+          deviceName={warningDevices.find((device) => device.warning)?.name}
+          deviceTemp={warningDevices.find((device) => device.warning)?.temperature}
+          checkWarning={() => checkWarning(warningDevices.find((device) => device.warning)?.id || "")}
         />
       )}
-      {isAddMode && <DeviceRegisterModal onClose={() => setIsAddMode(false)} addDevice={addDevice} deviceCount={devices.length} />}
+      {isAddMode && (
+        <DeviceRegisterModal onClose={() => setIsAddMode(false)} addDevice={addDevice} deviceCount={devices.length} />
+      )}
       {selectedItems.length > 0 && (
         <DeleteButton
           onClick={() => {
