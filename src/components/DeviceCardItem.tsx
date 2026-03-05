@@ -54,7 +54,7 @@ export default function DeviceCardItem({
   return (
     <Container>
       <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} setIsEditing={setIsEditing} />
-      <CardContainer>
+      <CardContainer className="Cardcontainer">
         {isDeleteMode ? (
           <label onClick={onSelect}>
             <DeleteCheckbox isSelected={isSelected} />
@@ -81,6 +81,35 @@ const Container = styled.div`
   position: relative;
   width: 240px;
   height: 286px;
+  :hover {
+    .Cardcontainer {
+    transform: translateY(-15px);
+    background: #454c53;
+
+    .temp {
+      background: #72787f;
+    }
+    .temp {
+      p {
+        font-family: "Pretendard";
+        font-style: normal;
+        font-weight: 600;
+        font-size: 26px;
+      }
+    }
+    .device {
+      p {
+        width: 204px;
+        height: 32px;
+
+        font-family: "Pretendard";
+        font-style: normal;
+        font-weight: 600;
+        font-size: 26px;
+        color: #fdf3f3;
+      }
+    }
+  }}
 `;
 
 // 온도 컨테이너
@@ -126,35 +155,6 @@ const CardContainer = styled.div`
   border: 1px solid #ffffff1a;
   border-radius: 12px;
   transition: 0.3s;
-
-  :hover {
-    transform: translateY(-15px);
-    background: #454c53;
-
-    .temp {
-      background: #72787f;
-    }
-    .temp {
-      p {
-        font-family: "Pretendard";
-        font-style: normal;
-        font-weight: 600;
-        font-size: 26px;
-      }
-    }
-    .device {
-      p {
-        width: 204px;
-        height: 32px;
-
-        font-family: "Pretendard";
-        font-style: normal;
-        font-weight: 600;
-        font-size: 26px;
-        color: #fdf3f3;
-      }
-    }
-  }
 `;
 
 // 기기 컨테이너
@@ -222,7 +222,7 @@ const WarningIcon = styled.img`
   border-radius: 8px;
 `;
 
-// 삭제 채크박스
+// 삭제 체크박스
 const DeleteCheckbox = styled.button<{ isSelected: boolean }>`
   position: absolute;
   width: 32px;

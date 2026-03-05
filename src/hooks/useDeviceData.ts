@@ -1,7 +1,12 @@
 import { useState, useMemo } from "react";
 import type { Device } from "../types/device";
+import useDeviceStomp from "./useDeviceStomp";
 
 export default function useDeviceData() {
+  const { isConnected, deviceData, subscribeDevice, unsubscribeDevice } = useDeviceStomp(
+    import.meta.env.VITE_API_BASE_URL,
+  );
+
   const [devices, setDevices] = useState<Device[]>(() => {
     const savedNames = JSON.parse(localStorage.getItem("deviceNames") || "{}");
     // if (savedNames) {
