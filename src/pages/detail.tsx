@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import type { ChartOptions } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
@@ -27,7 +28,7 @@ function Detail() {
   const chartBodyRef = React.useRef<HTMLDivElement | null>(null);
   const displayId = id?.split("-").pop();
 
-  const options = {
+  const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
