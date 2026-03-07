@@ -1,10 +1,11 @@
+import React, { useState, useRef, useEffect } from "react";
 import styled from "@emotion/styled";
-import { useState, useRef, useEffect } from "react";
 import dot from "../assets/dot.svg";
 import device from "../assets/device.svg";
 import warningIcon from "../assets/warning.svg";
 import DeviceDetail from "./DeviceDetail";
 import useDeviceDetail from "../hooks/useDeviceDetail";
+import { useNavigate } from "react-router-dom";
 
 interface DeviceCardProps {
   deviceName: string;
@@ -25,8 +26,9 @@ export default function DeviceCardItem({
   isSelected,
   onSelect,
   id,
-  updateDeviceName
+  updateDeviceName,
 }: DeviceCardProps) {
+  const navigate = useNavigate();
   const { isDetailVisible, toggleDetailVisibility } = useDeviceDetail();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -42,7 +44,7 @@ export default function DeviceCardItem({
     if (e.key === "Enter") {
       const newName = (e.target as HTMLInputElement).value;
       if (newName.trim().length > 8) {
-        alert("별명은 최대 8자까지 가능합니다.")
+        alert("별명은 최대 8자까지 가능합니다.");
         return;
       }
       updateDeviceName(id, newName);
@@ -53,21 +55,56 @@ export default function DeviceCardItem({
 
   return (
     <Container>
-      <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} setIsEditing={setIsEditing} />
-      <CardContainer>
+      <DeviceDetail
+        isVisible={isDetailVisible}
+        onClose={toggleDetailVisibility}
+        setIsEditing={setIsEditing}
+      />
+      <CardContainer
+        onClick={() => {
+          if (!isDeleteMode) {
+            navigate(`/detail/${id}`);
+          }
+        }}
+      >
         {isDeleteMode ? (
-          <label onClick={onSelect}>
+          <label
+            onClick={(e: React.MouseEvent<HTMLLabelElement>) => {
+              e.stopPropagation();
+              onSelect();
+            }}
+          >
             <DeleteCheckbox isSelected={isSelected} />
           </label>
         ) : (
           warning && <WarningIcon src={warningIcon} alt="warning" />
         )}
-        <DotImage onClick={toggleDetailVisibility} className="menu-trigger">{isDeleteMode ? null : <img src={dot} alt="dot" />}</DotImage>
+        <DotImage
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            e.stopPropagation();
+            toggleDetailVisibility();
+          }}
+          className="menu-trigger"
+        >
+          {isDeleteMode ? null : <img src={dot} alt="dot" />}
+        </DotImage>
         <DeviceContainer className="device">
           <DeviceImage>
             <img src={device} alt="device" />
           </DeviceImage>
-          <p>{isEditing ? (<EditNameInput ref={inputRef} type="text" defaultValue={deviceName} onKeyDown={enterHandle} onBlur={() => setIsEditing(false)} />) : (deviceName)}</p>
+          <p>
+            {isEditing ? (
+              <EditNameInput
+                ref={inputRef}
+                type="text"
+                defaultValue={deviceName}
+                onKeyDown={enterHandle}
+                onBlur={() => setIsEditing(false)}
+              />
+            ) : (
+              deviceName
+            )}
+          </p>
         </DeviceContainer>
         <TemperatureContainer className="temp">
           <p>{temperature}°C</p>

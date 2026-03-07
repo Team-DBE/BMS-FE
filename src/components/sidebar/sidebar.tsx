@@ -1,6 +1,6 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import styled from "@emotion/styled";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarHeader } from "./header/sidebar-header";
 import { SidebarItem } from "./item/sidebar-item";
 import Plus from "../../assets/+.svg";
@@ -19,49 +19,51 @@ interface SidebarNavItem {
 }
 
 interface SidebarProps {
-  navItems?: SidebarNavItem[];
-  projectName?: string;
-  searchPlaceholder?: string;
-  userName?: string;
-  teamsLoading?: boolean;
-  teamsError?: Error | null;
-  userRole?: "admin" | "member";
   onNavItemClick?: (itemId: string) => void;
   onSearch?: (value: string) => void;
   onTeamCreated?: () => void;
   onTeamUpdated?: () => void;
 }
 
-function Sidebar({ navItems = [], onNavItemClick = () => {} }: SidebarProps) {
+function Sidebar({ onNavItemClick = () => {} }: SidebarProps) {
+  const navigate = useNavigate();
   const location = useLocation();
 
-  const isMatch = (basePath?: string) =>
-    basePath != null &&
-    (location.pathname === basePath ||
-      location.pathname.startsWith(`${basePath}/`));
-
-  const activeItemId =
-    navItems.find(
-      (i) => isMatch(i.path) || i.subItems?.some((s) => isMatch(s.path)),
-    )?.id ??
-    navItems[0]?.id ??
-    "";
+  const [navItems, setNavItems] = useState<SidebarNavItem[]>([
+    { id: "section-1", label: "Section 1", path: "/section-1" },
+  ]);
 
   const isMainItemActive = useCallback(
-    (itemId: string) =>
-      itemId === activeItemId ||
-      navItems
-        .find((i) => i.id === itemId)
-        ?.subItems?.some((sub) => sub.id === activeItemId),
-    [activeItemId, navItems],
+    (itemId: string) => {
+      const item = navItems.find((i) => i.id === itemId);
+      if (!item || !item.path) return false;
+      return location.pathname === item.path;
+    },
+    [location.pathname, navItems],
   );
 
   const handleMainItemClick = useCallback(
     (itemId: string) => {
+      const item = navItems.find((i) => i.id === itemId);
+      if (item?.path) {
+        navigate(item.path);
+      } else {
+        navigate(`/${itemId}`);
+      }
       onNavItemClick(itemId);
     },
-    [onNavItemClick],
+    [navItems, navigate, onNavItemClick],
   );
+
+  const handleAddItem = useCallback(() => {
+    setNavItems((prev) => {
+      const nextIndex = prev.length + 1;
+      const newId = `section-${nextIndex}`;
+      const newLabel = `Section ${nextIndex}`;
+      const newPath = `/${newId}`;
+      return [...prev, { id: newId, label: newLabel, path: newPath }];
+    });
+  }, []);
 
   return (
     <SidebarContainer>
@@ -69,7 +71,12 @@ function Sidebar({ navItems = [], onNavItemClick = () => {} }: SidebarProps) {
       <SidebarContent>
         <Title>
           <span>Section</span>
-          <img src={Plus} alt="plus icon" style={{ width: 25, height: 25 }} />
+          <img
+            src={Plus}
+            alt="plus icon"
+            style={{ width: 25, height: 25, cursor: "pointer" }}
+            onClick={handleAddItem}
+          />
         </Title>
         <SidebarNavContent>
           <SidebarNavContainer>

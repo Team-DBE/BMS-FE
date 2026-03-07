@@ -11,12 +11,6 @@ import WarningModal from "../../components/modal/WarningModal.tsx";
 import useDeviceData from "../../hooks/useDeviceData.ts";
 
 function Home() {
-  const navItems = [
-    { id: "home", label: "홈", path: "/" },
-    // 필요한 메뉴가 생기면 여기 추가하면 됩니다.
-    // { id: "devices", label: "기기 관리", path: "/devices" },
-  ];
-
   const {
     devices,
     checkWarning,
@@ -37,10 +31,12 @@ function Home() {
 
   return (
     <HomeContainer>
-      <Sidebar navItems={navItems} />
+      <Sidebar />
       <MainContent>
         <Header>
-          <DeviceText>연결된 기기</DeviceText>
+          <div>
+            <DeviceText>연결된 기기</DeviceText>
+          </div>
           <DeviceDeleteButton
             onClick={() => toggleDeleteMode(devices.map((device) => device.id))}
             isDeleteMode={isDeleteMode}
