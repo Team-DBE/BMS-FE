@@ -34,9 +34,10 @@ export default function useDeviceStomp(serverUrl: string) {
     if (!clientRef.current) return;
     if (StompSubscriptionRef.current.has(deviceId)) return;
 
-    const topic = `/topic/device/${deviceId}`;
+    const topic = `/sub/device/${deviceId}`;
     const subscription = clientRef.current.subscribe(topic, (message) => {
       const receivedData = JSON.parse(message.body);
+      // console.log(`${deviceId}:`, receivedData);
       setDeviceData((prevData) => ({
         ...prevData,
         [deviceId]: receivedData,

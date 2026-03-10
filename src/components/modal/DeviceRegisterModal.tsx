@@ -32,8 +32,8 @@ export default function DeviceRegisterModal({ onClose, addDevice, deviceCount }:
     }
     mutate(serialNumber, {
       onSuccess: () => {
-        addDevice?.(serialNumber, `기기 ${deviceCount + 1}`);
         onClose?.();
+        addDevice?.(serialNumber, `기기 ${deviceCount + 1}`);
       },
       onError: () => {
         alert("등록할 수 없는 일련번호입니다.");

@@ -3,50 +3,58 @@ import type { Device } from "../types/device";
 import useDeviceStomp from "./useDeviceStomp";
 
 export default function useDeviceData() {
-  const { isConnected, deviceData, subscribeDevice, unsubscribeDevice } = useDeviceStomp(
-    import.meta.env.VITE_API_BASE_URL,
-  );
+  const severUrl = import.meta.env.VITE_API_BASE_URL;
+  const { deviceData, subscribeDevice, unsubscribeDevice } = useDeviceStomp(`${severUrl}/ws-stomp`);
 
-  const [devices, setDevices] = useState<Device[]>(() => {
-    const savedNames = JSON.parse(localStorage.getItem("deviceNames") || "{}");
-    // if (savedNames) {
-    //   return JSON.parse(savedNames);
-    // }
-    // return [];
+  const [devices, setDevices] = useState<Device[]>([]);
 
-    // 더미데이터 생성
-    return Array.from({ length: 5 }, (_, i) => {
-      const id = `device-${i + 1}`;
-      const temp = Math.floor(Math.random() * 100);
+  const liveDevices = useMemo(() => {
+    return devices.map((device) => {
+      const data = deviceData[device.id] as { temperature: number; risk: number };
+      const currentTemp = data ? data.temperature : device.temperature;
+
       return {
-        id,
-        name: savedNames[id] || `기기 ${i + 1}`,
-        temperature: temp,
-        warning: temp > 70, // 70도 넘으면 경고
+        ...device,
+        temperature: currentTemp,
+        warning: data?.risk >= 75,
+        showModal: data?.risk >= 75 && !device.hasShownWarning,
       };
     });
-  });
+  }, [deviceData, devices]);
 
-  const warningDevice = devices.find((device) => device.warning);
+  const warningDevice = liveDevices.find((device) => device.warning);
 
-  const addDevice = (name: string) => {
-    const temp = Math.floor(Math.random() * 100);
+  const addDevice = (id: string) => {
+    if (devices.some((device) => device.id === id)) {
+      alert("이미 등록된 일련번호입니다.");
+      return;
+    }
+    const savedNames = JSON.parse(localStorage.getItem("deviceNames") || "{}");
+
+    const deviceName = savedNames[id] || `기기 ${devices.length + 1}`;
+
     const newDevice: Device = {
-      id: `device-${Date.now()}`,
-      name,
-      temperature: temp,
-      warning: temp > 70,
+      id: id,
+      name: deviceName,
+      temperature: 0,
+      warning: false,
+      hasShownWarning: false,
     };
 
     setDevices((prev) => [...prev, newDevice]);
+
+    subscribeDevice(id);
+    console.log(`소켓 구독 ${id}`);
   };
 
   const deleteDevice = (id: string) => {
     setDevices((prev) => prev.filter((device) => device.id !== id));
+    unsubscribeDevice(id);
+    console.log(`소켓 구독 해제 ${id}`);
   };
 
   const checkWarning = (id: string) => {
-    setDevices((prev) => prev.map((device) => (device.id === id ? { ...device, warning: false } : device)));
+    setDevices((prev) => prev.map((device) => (device.id === id ? { ...device, hasShownWarning: true } : device)));
   };
 
   const updateDeviceName = (id: string, newName: string) => {
@@ -58,13 +66,13 @@ export default function useDeviceData() {
   };
 
   const warningDevices = useMemo(() => {
-    const warningDevices = devices.filter((device) => device.temperature > 70);
-    const normalDevices = devices.filter((device) => device.temperature <= 70);
+    const warningDevices = liveDevices.filter((device) => device.warning);
+    const normalDevices = liveDevices.filter((device) => !device.warning);
     return [...warningDevices, ...normalDevices];
-  }, [devices]);
+  }, [liveDevices]);
 
   return {
-    devices,
+    devices: liveDevices,
     warningDevice,
     addDevice,
     checkWarning,

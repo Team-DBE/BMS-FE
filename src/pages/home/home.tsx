@@ -32,7 +32,7 @@ function Home() {
             id={device.id}
             deviceName={device.name}
             temperature={device.temperature}
-            warning={device.temperature > 70}
+            warning={device.warning}
             isDeleteMode={isDeleteMode}
             isSelected={selectedItems.includes(device.id)}
             onSelect={() => toggleItemSelection(device.id)}
