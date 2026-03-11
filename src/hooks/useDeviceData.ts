@@ -38,12 +38,13 @@ export default function useDeviceData() {
 
   const warningDevice = liveDevices.find((device) => device.warning);
 
-  const addDevice = (id: string) => {
-    if (devices.some((device) => device.id === id)) {
-      alert("이미 등록된 일련번호입니다.");
-      return;
-    }
+  const addDevice = (id: string) => {    
     const savedNames = JSON.parse(localStorage.getItem("deviceNames") || "{}");
+
+    setDevices((prev) => {
+      if (prev.some((device) => device.id === id)) {
+        return prev;
+      }
 
     const deviceName = savedNames[id] || `기기 ${devices.length + 1}`;
 
@@ -55,10 +56,8 @@ export default function useDeviceData() {
       hasShownWarning: false,
     };
 
-    setDevices((prev) => [...prev, newDevice]);
-
-    subscribeDevice(id);
-    console.log(`소켓 구독 ${id}`);
+    return [...prev, newDevice];
+    });
   };
 
   const deleteDevice = (id: string) => {
