@@ -53,7 +53,6 @@ function Detail() {
       x: {
         grid: {
           color: "#393939", // 더 연하게
-          drawBorder: false,
         },
         ticks: {
           color: "#8B9096",
@@ -71,7 +70,6 @@ function Detail() {
         },
         grid: {
           color: "#393939",
-          drawBorder: false,
         },
       },
     },
