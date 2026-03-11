@@ -11,43 +11,22 @@ import WarningModal from "../../components/modal/WarningModal.tsx";
 import useDeviceData from "../../hooks/useDeviceData.ts";
 
 function Home() {
-  const {
-    devices,
-    checkWarning,
-    deleteDevice,
-    addDevice,
-    updateDeviceName,
-    warningDevices,
-  } = useDeviceData();
-  const {
-    isDeleteMode,
-    selectedItems,
-    toggleDeleteMode,
-    toggleItemSelection,
-    setIsDeleteMode,
-    setSelectedItems,
-  } = useDeleteMode();
+  const { devices, checkWarning, deleteDevice, addDevice, updateDeviceName, warningDevices } = useDeviceData();
+  const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection, setIsDeleteMode, setSelectedItems } =
+    useDeleteMode();
   const { isAddMode, toggleAddMode, setIsAddMode } = useDeviceAddMode();
   const warningModalDevice = warningDevices.find((device) => device.showModal);
 
   return (
     <HomeContainer>
-      <Header>
-        <DeviceText>연결된 기기</DeviceText>
-        <DeviceDeleteButton
-          onClick={() => toggleDeleteMode(devices.map((device) => device.id))}
-          isDeleteMode={isDeleteMode}
-        />
-      </Header>
-      <CardGrid>
-        <DeviceAddCard onClick={() => toggleAddMode()} />
-        {warningDevices.map((device) => (
-          <DeviceCardItem
-            key={device.id}
-            id={device.id}
-            deviceName={device.name}
-            temperature={device.temperature}
-            warning={device.warning}
+      <Sidebar />
+      <MainContent>
+        <Header>
+          <DeviceText>
+            연결된 기기
+          </DeviceText>
+          <DeviceDeleteButton
+            onClick={() => toggleDeleteMode(devices.map((device) => device.id))}
             isDeleteMode={isDeleteMode}
           />
         </Header>
@@ -59,7 +38,7 @@ function Home() {
               id={device.id}
               deviceName={device.name}
               temperature={device.temperature}
-              warning={device.temperature > 70}
+              warning={device.warning}
               isDeleteMode={isDeleteMode}
               isSelected={selectedItems.includes(device.id)}
               onSelect={() => toggleItemSelection(device.id)}
@@ -68,25 +47,15 @@ function Home() {
           ))}
         </CardGrid>
       </MainContent>
-      {warningDevices.some((device) => device.warning) && (
+      {warningModalDevice && (
         <WarningModal
-          deviceName={warningDevices.find((device) => device.warning)?.name}
-          deviceTemp={
-            warningDevices.find((device) => device.warning)?.temperature
-          }
-          checkWarning={() =>
-            checkWarning(
-              warningDevices.find((device) => device.warning)?.id || "",
-            )
-          }
+          deviceName={warningModalDevice.name}
+          deviceTemp={warningModalDevice.temperature}
+          checkWarning={() => checkWarning(warningModalDevice.id)}
         />
       )}
       {isAddMode && (
-        <DeviceRegisterModal
-          onClose={() => setIsAddMode(false)}
-          addDevice={addDevice}
-          deviceCount={devices.length}
-        />
+        <DeviceRegisterModal onClose={() => setIsAddMode(false)} addDevice={addDevice} deviceCount={devices.length} />
       )}
       {selectedItems.length > 0 && (
         <DeleteButton
@@ -110,7 +79,7 @@ const HomeContainer = styled.div`
 // Sidebar가 position: fixed(폭 280px)이므로
 // 메인 콘텐츠는 그 오른쪽에서 시작하도록 여백을 둠
 const MainContent = styled.div`
-  margin-left: 432px;
+  margin-left: 624px;
   padding: 100px 40px 40px;
   box-sizing: border-box;
 `;

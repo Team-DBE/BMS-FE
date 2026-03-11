@@ -6,7 +6,7 @@ interface DeviceDetailProps {
   isVisible: boolean;
   onClose?: () => void;
   setIsEditing?: (isEditing: boolean) => void;
-  id?: string;
+  id: string;
 }
 
 export default function DeviceDetail({ isVisible, onClose, setIsEditing, id }: DeviceDetailProps) {
@@ -40,7 +40,7 @@ export default function DeviceDetail({ isVisible, onClose, setIsEditing, id }: D
   return (
     <Container ref={menuRef} isVisible={isVisible} onClick={(e) => e.stopPropagation()}>
       <Category onClick={() => setIsEditing && setIsEditing(true)}>별명 수정</Category>
-      <Category onClick={() => Navigate(`/device/${id}`)}>페이지 이동</Category>
+      <Category onClick={() => Navigate(`/detail/${id}`)}>페이지 이동</Category>
       <Category>일련번호</Category>
     </Container>
   );
