@@ -1,14 +1,17 @@
 import styled from "@emotion/styled";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface DeviceDetailProps {
   isVisible: boolean;
   onClose?: () => void;
   setIsEditing?: (isEditing: boolean) => void;
+  id?: string;
 }
 
-export default function DeviceDetail({ isVisible, onClose, setIsEditing }: DeviceDetailProps) {
+export default function DeviceDetail({ isVisible, onClose, setIsEditing, id }: DeviceDetailProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const Navigate = useNavigate();
 
   useEffect(() => {
     if (!isVisible) return;
@@ -37,7 +40,7 @@ export default function DeviceDetail({ isVisible, onClose, setIsEditing }: Devic
   return (
     <Container ref={menuRef} isVisible={isVisible} onClick={(e) => e.stopPropagation()}>
       <Category onClick={() => setIsEditing && setIsEditing(true)}>별명 수정</Category>
-      <Category>페이지 이동</Category>
+      <Category onClick={() => Navigate(`/device/${id}`)}>페이지 이동</Category>
       <Category>일련번호</Category>
     </Container>
   );

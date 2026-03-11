@@ -1,17 +1,31 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { Device } from "../types/device";
 import useDeviceStomp from "./useDeviceStomp";
 
 export default function useDeviceData() {
   const severUrl = import.meta.env.VITE_API_BASE_URL;
-  const { deviceData, subscribeDevice, unsubscribeDevice } = useDeviceStomp(`${severUrl}/ws-stomp`);
+  const { isConnected, deviceData, subscribeDevice, unsubscribeDevice } = useDeviceStomp(`${severUrl}/ws-stomp`);
 
-  const [devices, setDevices] = useState<Device[]>([]);
+  const [devices, setDevices] = useState<Device[]>(() => {
+      return JSON.parse(localStorage.getItem("devices") || "[]");
+  });
+  
+  useEffect(() => {
+    localStorage.setItem("devices", JSON.stringify(devices));
+  }, [devices]);
+
+  useEffect(() => {
+    if(!isConnected) return;
+    devices.forEach((device) => {
+      subscribeDevice(device.id);
+      console.log(`소켓 구독 ${device.id}`);
+    });
+  }, [devices, subscribeDevice, isConnected]);
 
   const liveDevices = useMemo(() => {
     return devices.map((device) => {
       const data = deviceData[device.id] as { temperature: number; risk: number };
-      const currentTemp = data ? data.temperature : device.temperature;
+      const currentTemp = data ? data.temperature : 0;
 
       return {
         ...device,

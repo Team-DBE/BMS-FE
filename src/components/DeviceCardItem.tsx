@@ -53,7 +53,7 @@ export default function DeviceCardItem({
 
   return (
     <Container>
-      <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} setIsEditing={setIsEditing} />
+      <DeviceDetail isVisible={isDetailVisible} onClose={toggleDetailVisibility} setIsEditing={setIsEditing} id={id} />
       <CardContainer className="Cardcontainer">
         {isDeleteMode ? (
           <label onClick={onSelect}>

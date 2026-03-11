@@ -14,6 +14,7 @@ function Home() {
   const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection, setIsDeleteMode, setSelectedItems } =
     useDeleteMode();
   const { isAddMode, toggleAddMode, setIsAddMode } = useDeviceAddMode();
+  const warningModalDevice = warningDevices.find((device) => device.showModal);
 
   return (
     <HomeContainer>
@@ -40,11 +41,11 @@ function Home() {
           />
         ))}
       </CardGrid>
-      {warningDevices.some((device) => device.warning) && (
+      {warningModalDevice && (
         <WarningModal
-          deviceName={warningDevices.find((device) => device.warning)?.name}
-          deviceTemp={warningDevices.find((device) => device.warning)?.temperature}
-          checkWarning={() => checkWarning(warningDevices.find((device) => device.warning)?.id || "")}
+          deviceName={warningModalDevice.name}
+          deviceTemp={warningModalDevice.temperature}
+          checkWarning={() => checkWarning(warningModalDevice.id)}
         />
       )}
       {isAddMode && (
