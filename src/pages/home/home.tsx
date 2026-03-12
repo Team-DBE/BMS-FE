@@ -9,11 +9,26 @@ import useDeviceAddMode from "../../hooks/useDeviceAddMode";
 import DeviceRegisterModal from "../../components/modal/DeviceRegisterModal.tsx";
 import WarningModal from "../../components/modal/WarningModal.tsx";
 import useDeviceData from "../../hooks/useDeviceData.ts";
+import { useParams } from "react-router-dom";
 
 function Home() {
-  const { devices, checkWarning, deleteDevice, addDevice, updateDeviceName, warningDevices } = useDeviceData();
-  const { isDeleteMode, selectedItems, toggleDeleteMode, toggleItemSelection, setIsDeleteMode, setSelectedItems } =
-    useDeleteMode();
+  const { sessionId } = useParams<{ sessionId: string }>();
+  const {
+    devices,
+    checkWarning,
+    deleteDevice,
+    addDevice,
+    updateDeviceName,
+    warningDevices,
+  } = useDeviceData(sessionId);
+  const {
+    isDeleteMode,
+    selectedItems,
+    toggleDeleteMode,
+    toggleItemSelection,
+    setIsDeleteMode,
+    setSelectedItems,
+  } = useDeleteMode();
   const { isAddMode, toggleAddMode, setIsAddMode } = useDeviceAddMode();
   const warningModalDevice = warningDevices.find((device) => device.showModal);
 
@@ -22,9 +37,7 @@ function Home() {
       <Sidebar />
       <MainContent>
         <Header>
-          <DeviceText>
-            연결된 기기
-          </DeviceText>
+          <DeviceText>연결된 기기</DeviceText>
           <DeviceDeleteButton
             onClick={() => toggleDeleteMode(devices.map((device) => device.id))}
             isDeleteMode={isDeleteMode}
@@ -55,7 +68,11 @@ function Home() {
         />
       )}
       {isAddMode && (
-        <DeviceRegisterModal onClose={() => setIsAddMode(false)} addDevice={addDevice} deviceCount={devices.length} />
+        <DeviceRegisterModal
+          onClose={() => setIsAddMode(false)}
+          addDevice={addDevice}
+          deviceCount={devices.length}
+        />
       )}
       {selectedItems.length > 0 && (
         <DeleteButton
