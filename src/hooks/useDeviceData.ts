@@ -7,16 +7,11 @@ export default function useDeviceData(sessionId?: string) {
   const { isConnected, deviceData, subscribeDevice, unsubscribeDevice } =
     useDeviceStomp(`${severUrl}/ws-stomp`);
 
-  // 현재 경로의 세션 아이디(예: /section-1 -> sessionId: "1") 기준으로 저장 키 생성
-  // sessionId가 없으면 "default" 세션으로 취급
   const effectiveSessionId = sessionId ?? "default";
   const deviceIdsStorageKey = `deviceIds_${effectiveSessionId}`;
   const deviceNamesStorageKey = `deviceNames_${effectiveSessionId}`;
 
-  const [devices, setDevices] = useState<Device[]>([]);
-
-  // 세션이 바뀌면 해당 세션에 등록된 디바이스 ID만 불러와서 상태 구성
-  useEffect(() => {
+  const [devices, setDevices] = useState<Device[]>(() => {
     const storedIds: string[] = JSON.parse(
       localStorage.getItem(deviceIdsStorageKey) || "[]",
     );
@@ -24,16 +19,14 @@ export default function useDeviceData(sessionId?: string) {
       localStorage.getItem(deviceNamesStorageKey) || "{}",
     );
 
-    const initialDevices: Device[] = storedIds.map((id, index) => ({
+    return storedIds.map((id, index) => ({
       id,
       name: savedNames[id] || `기기 ${index + 1}`,
       temperature: 0,
       warning: false,
       hasShownWarning: false,
     }));
-
-    setDevices(initialDevices);
-  }, [deviceIdsStorageKey, deviceNamesStorageKey]);
+  });
 
   useEffect(() => {
     if (!isConnected) return;
