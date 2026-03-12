@@ -3,4 +3,5 @@ export interface Device {
   name: string;
   temperature: number;
   warning: boolean;
+  hasShownWarning?: boolean;
 }

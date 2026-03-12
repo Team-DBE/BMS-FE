@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 interface DeviceRegisterModalProps {
   onClose?: () => void;
-  addDevice?: (id: string) => void;
+  addDevice?: (serialNumber: string, name: string) => void;
   deviceCount: number;
 }
 
@@ -25,10 +25,18 @@ export default function DeviceRegisterModal({ onClose, addDevice, deviceCount }:
   const handleAddDevice = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter" || isPending) return;
 
-    mutate((e.target as HTMLInputElement).value, {
+    const serialNumber = (e.target as HTMLInputElement).value.trim();
+    if (!serialNumber) {
+      alert("일련번호를 입력해주세요.");
+      return;
+    }
+    mutate(serialNumber, {
       onSuccess: () => {
-        addDevice?.(`기기 ${deviceCount + 1}`);
         onClose?.();
+        addDevice?.(serialNumber, `기기 ${deviceCount + 1}`);
+      },
+      onError: () => {
+        alert("등록할 수 없는 일련번호입니다.");
       },
     });
   };
