@@ -2,20 +2,34 @@ import { useState, useMemo, useEffect } from "react";
 import type { Device } from "../types/device";
 import useDeviceStomp from "./useDeviceStomp";
 
-export default function useDeviceData() {
+export default function useDeviceData(sessionId?: string) {
   const severUrl = import.meta.env.VITE_API_BASE_URL;
-  const { isConnected, deviceData, subscribeDevice, unsubscribeDevice } = useDeviceStomp(`${severUrl}/ws-stomp`);
+  const { isConnected, deviceData, subscribeDevice, unsubscribeDevice } =
+    useDeviceStomp(`${severUrl}/ws-stomp`);
+
+  const effectiveSessionId = sessionId ?? "default";
+  const deviceIdsStorageKey = `deviceIds_${effectiveSessionId}`;
+  const deviceNamesStorageKey = `deviceNames_${effectiveSessionId}`;
 
   const [devices, setDevices] = useState<Device[]>(() => {
-      return JSON.parse(localStorage.getItem("devices") || "[]");
+    const storedIds: string[] = JSON.parse(
+      localStorage.getItem(deviceIdsStorageKey) || "[]",
+    );
+    const savedNames: Record<string, string> = JSON.parse(
+      localStorage.getItem(deviceNamesStorageKey) || "{}",
+    );
+
+    return storedIds.map((id, index) => ({
+      id,
+      name: savedNames[id] || `기기 ${index + 1}`,
+      temperature: 0,
+      warning: false,
+      hasShownWarning: false,
+    }));
   });
-  
-  useEffect(() => {
-    localStorage.setItem("devices", JSON.stringify(devices));
-  }, [devices]);
 
   useEffect(() => {
-    if(!isConnected) return;
+    if (!isConnected) return;
     devices.forEach((device) => {
       subscribeDevice(device.id);
       console.log(`소켓 구독 ${device.id}`);
@@ -24,7 +38,10 @@ export default function useDeviceData() {
 
   const liveDevices = useMemo(() => {
     return devices.map((device) => {
-      const data = deviceData[device.id] as { temperature: number; risk: number };
+      const data = deviceData[device.id] as {
+        temperature: number;
+        risk: number;
+      };
       const currentTemp = data ? data.temperature : 0;
 
       return {
@@ -38,43 +55,65 @@ export default function useDeviceData() {
 
   const warningDevice = liveDevices.find((device) => device.warning);
 
-  const addDevice = (id: string) => {    
-    const savedNames = JSON.parse(localStorage.getItem("deviceNames") || "{}");
+  const addDevice = (id: string) => {
+    const savedNames: Record<string, string> = JSON.parse(
+      localStorage.getItem(deviceNamesStorageKey) || "{}",
+    );
 
     setDevices((prev) => {
       if (prev.some((device) => device.id === id)) {
         return prev;
       }
 
-    const deviceName = savedNames[id] || `기기 ${devices.length + 1}`;
+      const deviceName = savedNames[id] || `기기 ${prev.length + 1}`;
 
-    const newDevice: Device = {
-      id: id,
-      name: deviceName,
-      temperature: 0,
-      warning: false,
-      hasShownWarning: false,
-    };
+      const newDevice: Device = {
+        id: id,
+        name: deviceName,
+        temperature: 0,
+        warning: false,
+        hasShownWarning: false,
+      };
 
-    return [...prev, newDevice];
+      const newDevices = [...prev, newDevice];
+      const newIds = newDevices.map((device) => device.id);
+      localStorage.setItem(deviceIdsStorageKey, JSON.stringify(newIds));
+
+      return newDevices;
     });
   };
 
   const deleteDevice = (id: string) => {
-    setDevices((prev) => prev.filter((device) => device.id !== id));
+    setDevices((prev) => {
+      const filtered = prev.filter((device) => device.id !== id);
+      const ids = filtered.map((device) => device.id);
+      localStorage.setItem(deviceIdsStorageKey, JSON.stringify(ids));
+      return filtered;
+    });
     unsubscribeDevice(id);
     console.log(`소켓 구독 해제 ${id}`);
   };
 
   const checkWarning = (id: string) => {
-    setDevices((prev) => prev.map((device) => (device.id === id ? { ...device, hasShownWarning: true } : device)));
+    setDevices((prev) =>
+      prev.map((device) =>
+        device.id === id ? { ...device, hasShownWarning: true } : device,
+      ),
+    );
   };
 
   const updateDeviceName = (id: string, newName: string) => {
-    setDevices((prev) => prev.map((device) => (device.id === id ? { ...device, name: newName } : device)));
+    setDevices((prev) =>
+      prev.map((device) =>
+        device.id === id ? { ...device, name: newName } : device,
+      ),
+    );
     localStorage.setItem(
-      "deviceNames",
-      JSON.stringify({ ...JSON.parse(localStorage.getItem("deviceNames") || "{}"), [id]: newName }),
+      deviceNamesStorageKey,
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem(deviceNamesStorageKey) || "{}"),
+        [id]: newName,
+      }),
     );
   };
 

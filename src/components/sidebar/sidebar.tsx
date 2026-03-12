@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarHeader } from "./header/sidebar-header";
@@ -29,9 +29,22 @@ function Sidebar({ onNavItemClick = () => {} }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [navItems, setNavItems] = useState<SidebarNavItem[]>([
-    { id: "section-1", label: "Section 1", path: "/section-1" },
-  ]);
+  const [navItems, setNavItems] = useState<SidebarNavItem[]>(() => {
+    const saved = localStorage.getItem("sessions");
+    if (saved) {
+      try {
+        return JSON.parse(saved) as SidebarNavItem[];
+      } catch {
+        // 파싱 실패 시 기본값으로 초기화
+      }
+    }
+    return [{ id: "section-1", label: "Section 1", path: "/section-1" }];
+  });
+
+  // 세션 목록 변경 시 localStorage에 저장
+  useEffect(() => {
+    localStorage.setItem("sessions", JSON.stringify(navItems));
+  }, [navItems]);
 
   const isMainItemActive = useCallback(
     (itemId: string) => {
@@ -49,6 +62,9 @@ function Sidebar({ onNavItemClick = () => {} }: SidebarProps) {
         navigate(item.path);
       } else {
         navigate(`/${itemId}`);
+      }
+      if (item?.path) {
+        localStorage.setItem("lastSessionPath", item.path);
       }
       onNavItemClick(itemId);
     },

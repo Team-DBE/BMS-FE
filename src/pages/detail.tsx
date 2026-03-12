@@ -13,6 +13,8 @@ import {
   Legend,
 } from "chart.js";
 import type { ChartOptions } from "chart.js";
+import useDeviceHistory from "../hooks/useDeviceHistory";
+import { mapHistoryToChartData } from "../utils/deviceHistoryUtils";
 
 ChartJS.register(
   CategoryScale,
@@ -26,7 +28,18 @@ ChartJS.register(
 function Detail() {
   const { id } = useParams<{ id: string }>();
   const chartBodyRef = React.useRef<HTMLDivElement | null>(null);
+  const serialNumber = id ?? "";
   const displayId = id?.split("-").pop();
+
+  const {
+    data: history = [],
+    isLoading,
+    isError,
+  } = useDeviceHistory(serialNumber);
+
+  const { labels, riskData } = React.useMemo(() => {
+    return mapHistoryToChartData(history);
+  }, [history]);
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -52,7 +65,7 @@ function Detail() {
     scales: {
       x: {
         grid: {
-          color: "#393939", // 더 연하게
+          color: "#393939",
         },
         ticks: {
           color: "#8B9096",
@@ -78,34 +91,10 @@ function Detail() {
   const yAxisLabels = [100, 75, 50, 25, 0];
 
   const data = {
-    labels: [
-      "11:57",
-      "11:58",
-      "11:59",
-      "12:00",
-      "12:01",
-      "12:02",
-      "12:03",
-      "12:04",
-      "12:05",
-      "12:06",
-      "11:57",
-      "11:58",
-      "11:59",
-      "12:00",
-      "12:01",
-      "12:02",
-      "12:03",
-      "12:04",
-      "12:05",
-      "12:06",
-    ],
+    labels,
     datasets: [
       {
-        data: [
-          6, 15, 12, 28, 30, 45, 60, 55, 70, 80, 6, 15, 12, 28, 30, 45, 60, 55,
-          70, 80,
-        ],
+        data: riskData,
         fill: false,
       },
     ],
@@ -132,7 +121,9 @@ function Detail() {
               ))}
             </YAxisContainer>
             <ChartWrapper style={{ width: `${chartWidth}px` }}>
-              <Line data={data} options={options} />
+              {!isLoading && !isError && history.length > 0 && (
+                <Line data={data} options={options} />
+              )}
             </ChartWrapper>
           </ChartBody>
         </ChartContainer>
